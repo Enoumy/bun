@@ -1484,15 +1484,15 @@ pub fn NewClassWithInstanceType(
                             try writer.writeAll(" ");
                         }
                         var read_only_ = false;
-                        if (options.read_only or @hasField(@TypeOf(comptime @field(staticFunctions, function_names[i])), "ro")) {
+                        if (options.read_only or @hasField(@TypeOf(@field(staticFunctions, function_names[i])), "ro")) {
                             read_only_ = true;
                             try writer.writeAll("ReadOnly");
                         }
 
                         if (comptime std.meta.trait.isContainer(
-                            @TypeOf(comptime @field(staticFunctions, function_names[i])),
+                            @TypeOf(@field(staticFunctions, function_names[i])),
                         ) and
-                            @hasField(@TypeOf(comptime @field(
+                            @hasField(@TypeOf(@field(
                             staticFunctions,
                             function_names[i],
                         )), "enumerable") and !@field(staticFunctions, function_names[i]).enumerable) {
