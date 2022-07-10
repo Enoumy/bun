@@ -171,7 +171,7 @@ fn addInternalPackages(step: *std.build.LibExeObjStep, _: std.mem.Allocator, tar
 }
 var output_dir: []const u8 = "";
 fn panicIfNotFound(comptime filepath: []const u8) []const u8 {
-    var file = std.fs.cwd().openFile(filepath, .{ .mode = .read_only }) catch |err| {
+    var file = std.fs.cwd().openFile(filepath, .{}) catch |err| {
         std.debug.panic("error: {s} opening {s}. Please ensure you've downloaded git submodules, and ran `make vendor`, `make jsc`.", .{ filepath, @errorName(err) });
     };
     file.close();
@@ -180,7 +180,7 @@ fn panicIfNotFound(comptime filepath: []const u8) []const u8 {
 }
 
 fn updateRuntime() anyerror!void {
-    var runtime_out_file = try std.fs.cwd().openFile("src/runtime.out.js", .{ .mode = .read_only });
+    var runtime_out_file = try std.fs.cwd().openFile("src/runtime.out.js", .{});
     const runtime_hash = std.hash.Wyhash.hash(
         0,
         try runtime_out_file.readToEndAlloc(std.heap.page_allocator, try runtime_out_file.getEndPos()),
@@ -188,7 +188,7 @@ fn updateRuntime() anyerror!void {
     const runtime_version_file = std.fs.cwd().createFile("src/runtime.version", .{ .truncate = true }) catch std.debug.panic("Failed to create src/runtime.version", .{});
     defer runtime_version_file.close();
     runtime_version_file.writer().print("{x}", .{runtime_hash}) catch unreachable;
-    var fallback_out_file = try std.fs.cwd().openFile("src/fallback.out.js", .{ .mode = .read_only });
+    var fallback_out_file = try std.fs.cwd().openFile("src/fallback.out.js", .{});
     const fallback_hash = std.hash.Wyhash.hash(
         0,
         try fallback_out_file.readToEndAlloc(std.heap.page_allocator, try fallback_out_file.getEndPos()),
